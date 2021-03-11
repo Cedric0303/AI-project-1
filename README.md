@@ -2,7 +2,7 @@
 
 TODO
 -----------------------------------------
-- implement distance calculation function
+- implement distance calculation function (maybe)
 - implement block token
 - implement swing function
 - implement search algorithm
