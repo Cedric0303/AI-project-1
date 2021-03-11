@@ -6,4 +6,4 @@ TODO
 - implement block token
 - implement swing function
 - implement search algorithm
-- implement simultaneous token move (isntead of sequentially)
+- implement simultaneous token move (instead of sequentially)
