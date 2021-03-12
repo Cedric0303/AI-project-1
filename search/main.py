@@ -13,14 +13,14 @@ import json
 # inside the `search` directory (like this one and `util.py`) and
 # then import from them like this:
 from search.util import print_board, print_slide, print_swing
-import search.board
+from search.board import Board
 
 def main():
     try:
         with open(sys.argv[1]) as file:
             data = json.load(file)
-            board = search.board.Board(data)
-            print_board(board.get_board_dict(), compact=True)
+            board = Board(data)
+            print_board(board.print_dict(), compact=True)
 
     except IndexError:
         print("usage: python3 -m search path/to/input.json", file=sys.stderr)

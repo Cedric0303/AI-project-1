@@ -1,60 +1,27 @@
+from search.token import Token, Upper, Lower, Block
+
 class Board():
+
     def __init__(self, token_data):
-        self.token_dict = Board.create_token_dict(token_data)
-        self.board_dict = Board.generate_board(self.token_dict)
+        self.board_dict = Board.create_board_dict(token_data)
 
     # default size of board
     size = range(-4, +4+1)
 
     # generate dictionary of tokens and blocks with their coordinates
-    def create_token_dict(data):
-        token_dict = dict()
-        for s, r, q in data['upper']:
-            token_dict[r, q] = s.upper()
-        for s, r, q in data['lower']:
-            token_dict[r, q] = s.lower()
-        for s, r, q in data['block']:
-            token_dict[r, q] = "\"\""
-        return token_dict
-
-    # generate dictionary of all hex coordinates along with entries and blocks
-    def generate_board(token_dict):
+    def create_board_dict(data):
         board_dict = dict()
-        for rq in [(r,q) for r in Board.size for q in Board.size if -r-q in Board.size]:
-            if rq in token_dict:
-                board_dict[rq] = token_dict[rq]
-            else:
-                board_dict[rq] = " "
+        for s, r, q in data['upper']:
+            board_dict[r, q] = Upper(s, r, q)
+        for s, r, q in data['lower']:
+            board_dict[r, q] = Lower(s, r, q)
+        for s, r, q in data['block']:
+            board_dict[r, q] = Block(r, q)
         return board_dict
 
-    # generate list of adjacent hex including swings and blocks
-    def get_adjacent_hex(hex, board_dict):
-        adjacent_hex_list = []
-        (x, y) = hex
-        temp_list = [(x, y-1), (x-1, y), 
-                    (x+1, y), (x, y+1), 
-                    (x-1, y+1), (x+1, y-1)]
-        for (each_x, each_y) in temp_list:
-            if each_x in Board.size and each_y in Board.size:
-                adjacent_hex_list.append((each_x, each_y))
-        # swing
-        valid_swing_tiles=[]
-        for each_adj in adjacent_hex_list:
-            if each_adj in board_dict and \
-                board_dict[each_adj].isalpha() and \
-                board_dict[each_adj].isupper():
-                valid_swing_tiles.append(each_adj)
-        for (x, y) in valid_swing_tiles:
-            temp_list = [(x, y-1), (x-1, y), 
-                        (x+1, y), (x, y+1), 
-                        (x-1, y+1), (x+1, y-1)]
-            for (each_x, each_y) in temp_list:
-                if each_x in Board.size and each_y in Board.size and \
-                (each_x, each_y) != hex and \
-                (each_x, each_y) not in adjacent_hex_list:
-                    adjacent_hex_list.append((each_x, each_y))
-
-        return adjacent_hex_list
-
-    def get_board_dict(self):
-        return self.board_dict
+    # create dict from Token dict to work with print_board function
+    def print_dict(self):
+        output_dict = dict()
+        for each in self.board_dict:
+            output_dict[each] = self.board_dict[each].get_name()
+        return output_dict
