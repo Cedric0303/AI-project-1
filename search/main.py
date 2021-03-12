@@ -20,7 +20,7 @@ def main():
         with open(sys.argv[1]) as file:
             data = json.load(file)
             board = Board(data)
-            print_board(board.print_dict(), compact=True)
+            print_board(board.print_dict(), compact=False)
 
     except IndexError:
         print("usage: python3 -m search path/to/input.json", file=sys.stderr)

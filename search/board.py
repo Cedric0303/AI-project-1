@@ -1,4 +1,4 @@
-from search.token import Token, Upper, Lower, Block
+from search.token import Upper, Lower, Block
 
 class Board():
 
@@ -8,7 +8,7 @@ class Board():
     # default size of board
     size = range(-4, +4+1)
 
-    # generate dictionary of tokens and blocks with their coordinates
+    # generate dict of tokens with their coordinates
     def create_board_dict(data):
         board_dict = dict()
         for s, r, q in data['upper']:
@@ -19,7 +19,7 @@ class Board():
             board_dict[r, q] = Block(r, q)
         return board_dict
 
-    # create dict from Token dict to work with print_board function
+    # create dict from token dict to work with print_board function
     def print_dict(self):
         output_dict = dict()
         for each in self.board_dict:

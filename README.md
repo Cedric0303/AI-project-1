@@ -2,8 +2,8 @@
 
 TODO
 -----------------------------------------
-- implement distance calculation function (maybe)
-- implement block token
+- implement 'play'
 - implement swing function
+- implement block function
 - implement search algorithm
 - implement simultaneous token move (instead of sequentially)
