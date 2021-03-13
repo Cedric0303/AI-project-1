@@ -1,67 +1,76 @@
-from search.token import Upper, Lower, Block
+from search.player import Upper, Lower, Block
+from search.token import Token, rock, paper, scissors, block
 
 class Board():
 
+    # generate token classes of players 
+    # with their coordinates and block tokens
+    # does not allow for overlaps!!
     def __init__(self, token_data):
-        self.board_dict = Board.create_board_dict(token_data)
-
+        
+        self.upper = Upper(token_data['upper'])
+        self.lower = Lower(token_data['lower'])
+        self.block = Block(token_data['block'])
+        
     # default size of board
     size = range(-4, +4+1)
 
-    # generate dict of tokens with their coordinates
-    # does not allow for overlaps!!
-    def create_board_dict(data):
-        board_dict = dict()
-        for s, r, q in data['upper']:
-            board_dict[r, q] = Upper(s, r, q)
-        for s, r, q in data['lower']:
-            board_dict[r, q] = Lower(s, r, q)
-        for s, r, q in data['block']:
-            board_dict[r, q] = Block(r, q)
-        return board_dict
-
-    # create dict from token dict to work with print_board function
-    def print_dict(self):
+    # create dict of tokens on occupied hex tiles
+    # from tokens of player classes
+    def create_dict(self):
+        
         output_dict = dict()
-        for each in self.board_dict:
-            output_dict[each] = self.board_dict[each].get_name()
+        for each in self.upper.token_list + \
+                    self.lower.token_list + \
+                    self.block.token_list:
+            if each.coord not in output_dict:
+                output_dict[each.coord] = each.name
+            else:
+                output_dict[each.coord] += each.name
         return output_dict
 
-    # set up fighting mechanic, where it takes a list of all tokens on this coord
-    # and returns the list of still-alive tokens after the battle
-    def battle(self, all_tokens):
-        p_count = 0
-        r_count = 0
-        s_count = 0
 
-        paper_die = False
-        scissor_die = False
-        rock_die = False
+    # set up fighting mechanic, 
+    # where it takes a dict of all tokens on all coords, 
+    # returns the dict of still-alive tokens after the battle
+    # and update board Upper and Lower classes
+    def battle(self, cord_dict):
+        
+        p_count = r_count = s_count = 0
+        paper_die = scissor_die = rock_die = False
         
         # count frequency of tokens
-        for token in all_tokens:
-            ttype = token.get_name().lower()
-            if ttype == 'p':
+        for coord, token in cord_dict:
+            if isinstance(token, paper):
                 p_count += 1
-            elif ttype == 'r':
+            elif isinstance(token, rock):
                 r_count += 1
-            elif ttype == 's':
+            elif isinstance(token, scissors):
                 s_count += 1
 
         # check battling types
-        if s_count >= 1:
-            paper_die = True
-        if r_count >= 1:
-            scissor_die = True
-        if p_count >= 1:
-            rock_die = True
+        paper_die = bool(s_count)
+        scissor_die = bool(r_count)
+        rock_die = bool(p_count)
 
-        alive_tokens = []
-        for token in all_tokens:
-            ttype = token.get_name().lower()
-            if (ttype == 'p' and paper_die == False) or \
-            (ttype == 'r' and rock_die == False) or \
-            (ttype == 's' and scissor_die == False):
-                alive_tokens.append(token)
+        # check battling types
+        #if s_count >= 1:
+        #    paper_die = True
+        #if r_count >= 1:
+        #    scissor_die = True
+        #if p_count >= 1:
+        #    rock_die = True
+        
+        #self.upper.clear_token_list()
+        #self.lower.clear_token_list()
+        alive_tokens = dict()
+        for coord, token in cord_dict:
+            if (isinstance(token, paper) and paper_die == False) or \
+                (isinstance(token, rock) and rock_die == False) or \
+                (isinstance(token, scissors) and scissor_die == False):
+                if coord not in alive_tokens:
+                    alive_tokens[coord] = token.name
+                else:
+                    alive_tokens[coord] += token.name
 
         return alive_tokens 

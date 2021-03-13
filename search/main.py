@@ -18,9 +18,11 @@ from search.board import Board
 def main():
     try:
         with open(sys.argv[1]) as file:
-            data = json.load(file)
-            board = Board(data)
-            print_board(board.print_dict(), compact=False)
+            token_data = json.load(file)
+            board = Board(token_data)
+            print_board(board.create_dict(), compact=True)
+            #board.battle(board.create_dict())
+
 
     except IndexError:
         print("usage: python3 -m search path/to/input.json", file=sys.stderr)
