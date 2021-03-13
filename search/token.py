@@ -37,7 +37,7 @@ class Token():
                 (each_x, each_y) not in adjacent_hex_list:
                     adjacent_hex_list.append((each_x, each_y))
         return adjacent_hex_list
-
+    
     def get_name(self):
         return self.name
 
