@@ -12,7 +12,7 @@ class Token():
     def get_adjacent_hex(self, token_list):
         
         token_dict = {token.coord: token.name for token in token_list}
-        adjacent_hex_list = []
+        adjacent_hex_list = list()
         (x, y) = self.coord
         temp_list = [(x, y-1), (x-1, y), 
                     (x+1, y), (x, y+1), 
@@ -40,21 +40,21 @@ class Token():
                 each_y in search.board.Board.size and \
                 (each_x, each_y) != self.coord and \
                 (each_x, each_y) not in adjacent_hex_list:
-                    adjacent_hex_list.append((each_x, each_y))
+                    adjacent_hex_list.append((each_x, each_y))         
         return adjacent_hex_list
 
-class rock(Token):
+class Rock(Token):
     
     pass
 
-class paper(Token):
+class Paper(Token):
     
     pass
 
-class scissors(Token):
+class Scissors(Token):
     
     pass
 
-class block(Token):
+class Block(Token):
     
     pass

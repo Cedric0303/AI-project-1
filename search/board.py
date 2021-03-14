@@ -1,5 +1,5 @@
-from search.player import Upper, Lower, Block
-from search.token import Token, rock, paper, scissors, block
+from search.player import Upper, Lower, Non_player
+from search.token import Token, Rock, Paper, Scissors, Block
 
 class Board():
 
@@ -10,7 +10,7 @@ class Board():
         
         self.upper = Upper(token_data['upper'])
         self.lower = Lower(token_data['lower'])
-        self.block = Block(token_data['block'])
+        self.block = Non_player(token_data['block'])
         
     # default size of board
     size = range(-4, +4+1)
@@ -34,43 +34,59 @@ class Board():
     # where it takes a dict of all tokens on all coords, 
     # returns the dict of still-alive tokens after the battle
     # and update board Upper and Lower classes
-    def battle(self, cord_dict):
-        
-        p_count = r_count = s_count = 0
-        paper_die = scissor_die = rock_die = False
-        
-        # count frequency of tokens
-        for coord, token in cord_dict:
-            if isinstance(token, paper):
-                p_count += 1
-            elif isinstance(token, rock):
-                r_count += 1
-            elif isinstance(token, scissors):
-                s_count += 1
+    def battle(self, coord_dict):
 
-        # check battling types
-        paper_die = bool(s_count)
-        scissor_die = bool(r_count)
-        rock_die = bool(p_count)
-
-        # check battling types
-        #if s_count >= 1:
-        #    paper_die = True
-        #if r_count >= 1:
-        #    scissor_die = True
-        #if p_count >= 1:
-        #    rock_die = True
+        paper_die = False
+        scissor_die = False
+        Rock_die = False
         
-        #self.upper.clear_token_list()
-        #self.lower.clear_token_list()
         alive_tokens = dict()
-        for coord, token in cord_dict:
-            if (isinstance(token, paper) and paper_die == False) or \
-                (isinstance(token, rock) and rock_die == False) or \
-                (isinstance(token, scissors) and scissor_die == False):
-                if coord not in alive_tokens:
-                    alive_tokens[coord] = token.name
-                else:
-                    alive_tokens[coord] += token.name
 
+        self.upper.clear_token_list()
+        self.lower.clear_token_list()
+
+        # count frequency of tokens
+        for coord, tokens in coord_dict.items():
+            if len(tokens) > 1:
+                for token in list(tokens):
+                    ttype = token.lower()
+                    if ttype == 'p':
+                        Rock_die = True
+                    elif ttype == 'r':
+                        scissor_die = True
+                    elif ttype == 's':
+                        paper_die = True
+
+                for token in list(tokens):
+                    ttype = token.lower()
+                    if (ttype == 'p' and paper_die == False) or \
+                        (ttype == 'r' and Rock_die == False) or \
+                        (ttype == 's' and scissor_die == False):
+                        if coord not in alive_tokens:
+                            alive_tokens[coord] = [token]
+                        else:
+                            alive_tokens[coord].append(token)
+            else:
+                if coord not in alive_tokens:
+                    alive_tokens[coord] = [tokens]
+                else:
+                    alive_tokens[coord].append(token)
+        
+        temp_upper_list = list()
+        temp_lower_list = list()
+        for (x, y), tokens in alive_tokens.items():
+            if len(tokens) > 1:
+                for token in tokens:
+                    if token.isalpha() and token.isupper():
+                        temp_upper_list.append([token.lower(), x ,y])
+                    elif token.isalpha() and token.islower():
+                        temp_lower_list.append([token, x ,y])
+            else:
+                if tokens[0].isalpha() and tokens[0].isupper():
+                    temp_upper_list.append([tokens[0].lower(), x ,y])
+                elif tokens[0].isalpha() and tokens[0].islower():
+                    temp_lower_list.append([tokens[0], x ,y])
+        
+        self.upper = Upper(temp_upper_list)
+        self.lower = Lower(temp_lower_list)
         return alive_tokens 
