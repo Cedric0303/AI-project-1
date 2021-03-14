@@ -1,6 +1,6 @@
 import search.board
 
-from search.token import Rock, Paper, Scissors, Block
+from search.token import Token, Rock, Paper, Scissors, Block
 
 class Player():
 

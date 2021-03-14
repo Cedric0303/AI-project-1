@@ -1,5 +1,4 @@
 from search.player import Upper, Lower, Non_player
-from search.token import Token, Rock, Paper, Scissors, Block
 
 class Board():
 
@@ -71,22 +70,18 @@ class Board():
                     alive_tokens[coord] = [tokens]
                 else:
                     alive_tokens[coord].append(token)
-        
-        temp_upper_list = list()
-        temp_lower_list = list()
+
         for (x, y), tokens in alive_tokens.items():
             if len(tokens) > 1:
                 for token in tokens:
                     if token.isalpha() and token.isupper():
-                        temp_upper_list.append([token.lower(), x ,y])
+                        self.upper = Upper([[token.lower(), x ,y]])
                     elif token.isalpha() and token.islower():
-                        temp_lower_list.append([token, x ,y])
+                        self.lower = Lower([[token, x ,y]])
             else:
                 if tokens[0].isalpha() and tokens[0].isupper():
-                    temp_upper_list.append([tokens[0].lower(), x ,y])
+                    self.upper = Upper([[tokens[0].lower(), x ,y]])
                 elif tokens[0].isalpha() and tokens[0].islower():
-                    temp_lower_list.append([tokens[0], x ,y])
-        
-        self.upper = Upper(temp_upper_list)
-        self.lower = Lower(temp_lower_list)
+                    self.lower = Lower([[tokens[0], x ,y]])
+
         return alive_tokens 

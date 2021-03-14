@@ -20,9 +20,12 @@ def main():
         with open(sys.argv[1]) as file:
             token_data = json.load(file)
             board = Board(token_data)
-            print_board(board.create_dict(), compact=True)
-            board.battle(board.create_dict())
-            print_board(board.create_dict(), compact=True)
+            board_dict = board.create_dict()
+            print_board(board_dict, compact=True)
+            board.battle(board_dict)
+            if board.create_dict() != board_dict:
+                board_dict = board.create_dict()
+                print_board(board_dict, compact=True)
 
 
     except IndexError:
