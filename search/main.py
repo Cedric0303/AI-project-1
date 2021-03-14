@@ -16,17 +16,17 @@ from search.util import print_board, print_slide, print_swing
 from search.board import Board
 
 def main():
+
     try:
         with open(sys.argv[1]) as file:
             token_data = json.load(file)
             board = Board(token_data)
             board_dict = board.create_dict()
             print_board(board_dict, compact=True)
-            board.battle(board_dict)
-            if board.create_dict() != board_dict:
-                board_dict = board.create_dict()
-                print_board(board_dict, compact=True)
-
+            while not board.win(): # WIP
+                board.battle(board_dict)
+                board = board.upper.play(board)
+                break
 
     except IndexError:
         print("usage: python3 -m search path/to/input.json", file=sys.stderr)
