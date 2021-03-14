@@ -2,8 +2,7 @@
 
 TODO
 -----------------------------------------
-- implement 'play'
-- implement swing function
-- implement block function
-- implement search algorithm
+- implement targeting system (by calculating shortest distance)
+- add blocks to adj hex function
+- implement win condition (target list empty)
 - implement simultaneous token move (instead of sequentially)
