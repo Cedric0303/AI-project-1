@@ -51,6 +51,9 @@ class Token():
         
         self.coord = coord
 
+    def set_target(self, target):
+        self.target = target
+
 class Rock(Token):
 
     def __init__(self, name, x, y):
