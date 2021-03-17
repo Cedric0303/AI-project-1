@@ -80,16 +80,8 @@ class Board():
                     self.upper = Upper([[token.lower(), x ,y]])
                 elif token.isalpha() and token.islower():
                     self.lower = Lower([[token, x ,y]])
-        
         return alive_tokens
 
     # win when no lower tokens left
     def win(self):
-        return not bool(self.lower)
-
-    
-
-        
-        
-            
-
+        return not bool(self.lower.token_list)

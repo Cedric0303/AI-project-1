@@ -22,11 +22,13 @@ def main():
             token_data = json.load(file)
             board = Board(token_data)
             board_dict = board.create_dict()
-            print_board(board_dict, compact=True)
             while not board.win(): # WIP
+                print_board(board_dict, compact=True)
+                board.upper.play(board)
+                board_dict = board.create_dict()
                 board.battle(board_dict)
-                board = board.upper.play(board)
-                break
+            board_dict = board.create_dict()
+            print_board(board_dict, compact=True)
 
     except IndexError:
         print("usage: python3 -m search path/to/input.json", file=sys.stderr)
