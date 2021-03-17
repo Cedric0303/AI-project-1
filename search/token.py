@@ -1,5 +1,5 @@
-import search.board
-import search.player
+import math
+from search.util import print_slide, print_swing
 
 class Token():
 
@@ -47,9 +47,22 @@ class Token():
         
         return final_adj_list
 
-    def move(self, coord):
-        
+    def move(self, coord, board):
+        (x1, y1) = self.coord
+        (x2, y2) = coord
+        distance = self.calc_distance(self.coord, coord)
+        if (distance == 1):
+            print_slide(board.turn, x1, y1, x2, y2);
+        elif distance > 1:
+            print_swing(board.turn, x1, y1, x2, y2);
         self.coord = coord
+
+    # calculate direct line distance between two tokens' coordinates
+    def calc_distance(self, token1, token2):
+        (x1, y1) = token1
+        (x2, y2) = token2
+        dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
+        return dist
 
     def set_target(self, target):
         self.target = target

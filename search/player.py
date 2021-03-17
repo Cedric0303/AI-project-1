@@ -11,29 +11,25 @@ class Player():
         self.token_list.clear()
 
     # calculate direct line distance between two tokens' coordinates
-    def calc_distance(self, token1, token2):
-        (x1, y1) = token1
-        (x2, y2) = token2
-        dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
-        return dist
 
     # return the enemy token nearest to the supplied Upper token
-    def pick_nearest(self, upper, lowers):
+    def pick_nearest(self, token, lowers):
         nearest = 10 # arbitrary greater than 8
         best_target = False
         for target in lowers.token_list:
-            distance = self.calc_distance(upper.coord, target.coord)
-            if distance < nearest:
-                nearest = distance
-                best_target = target
+            if isinstance(target, token.enemy):
+                distance = token.calc_distance(token.coord, target.coord)
+                if distance < nearest:
+                    nearest = distance
+                    best_target = target
         return best_target
 
     # carry out search to find best path/ best move
-    def best_valid_move(self, moves, target):
+    def best_valid_move(self, moves, token):
         nearest = 10
         best_move = False
         for move in moves:
-            distance = self.calc_distance(move, target.coord)
+            distance = token.calc_distance(move, token.target.coord)
             if distance < nearest:
                 nearest = distance
                 best_move = move
@@ -68,9 +64,9 @@ class Upper(Player):
             if token.target:
                 moves = (token.get_adj_hex(board.upper.token_list, 
                                             blocks, board))
-                check_move = self.best_valid_move(moves, token.target)
+                check_move = self.best_valid_move(moves, token)
                 if check_move != False:
-                    token.move(check_move)
+                    token.move(check_move, board)
 
 class Lower(Player):
     

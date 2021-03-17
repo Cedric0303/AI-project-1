@@ -12,7 +12,7 @@ import json
 # If you want to separate your code into separate files, put them
 # inside the `search` directory (like this one and `util.py`) and
 # then import from them like this:
-from search.util import print_board, print_slide, print_swing
+from search.util import print_board
 from search.board import Board
 
 def main():
@@ -22,13 +22,14 @@ def main():
             token_data = json.load(file)
             board = Board(token_data)
             board_dict = board.create_dict()
-            while not board.win(): # WIP
-                print_board(board_dict, compact=True)
+            while not board.win() and board.turn <= 5: # WIP
+                print_board(board_dict, 24*" " + "Turn " +  str(board.turn))
+                board.next_turn();
                 board.upper.play(board)
                 board_dict = board.create_dict()
                 board.battle(board_dict)
             board_dict = board.create_dict()
-            print_board(board_dict, compact=True)
+            print_board(board_dict, 24*" " + "Turn " + str(board.turn))
 
     except IndexError:
         print("usage: python3 -m search path/to/input.json", file=sys.stderr)
