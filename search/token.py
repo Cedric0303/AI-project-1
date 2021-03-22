@@ -8,6 +8,7 @@ class Token():
         self.name = name
         self.coord = x, y
         self.target = False
+        self.temp_move = None
 
     # generate list of adjacent hex tiles of current hex tile
     # including swings and blocks
@@ -56,6 +57,13 @@ class Token():
         else:
             print_swing(board.turn, x1, y1, x2, y2)
         self.coord = coord
+
+    def initialize_move(self, coord):
+        self.temp_move = coord
+        return self
+
+    def nearest_distance(self):
+        return self.calc_distance(self.target.coord, self.temp_move)
 
     # calculate direct line distance between two tokens' coordinates
     def calc_distance(self, token1, token2):

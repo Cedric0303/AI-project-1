@@ -1,4 +1,6 @@
 import math
+from os import O_TEMPORARY
+from sys import int_info
 import search.board
 from search.token import Token, Rock, Paper, Scissors, Block
 
@@ -12,6 +14,7 @@ class Player():
 
     # return the enemy token nearest to the supplied Upper token
     def pick_nearest(self, token, lowers):
+
         nearest = 10 # arbitrary greater than 8
         best_target = False
         for target in lowers.token_list:
@@ -52,19 +55,38 @@ class Upper(Player):
     def play(self, board):
         
         blocks = [block.coord for block in board.block.token_list]
-
+        move_array = list()
         # play each token
         for token in self.token_list:
             if not token.target:
                 # get new target
-                token.target = self.pick_nearest(token, board.lower)
+                target = self.pick_nearest(token, board.lower)
+                token.set_target(target)
                 # move to target (WIP)
             if token.target:
                 moves = (token.get_adj_hex(board.upper.token_list, 
                                             blocks, board))
                 check_move = self.best_valid_move(moves, token)
                 if check_move != False:
-                    token.move(check_move, board)
+                    move_array.append(token.initialize_move(check_move))
+       
+        # check for own tokens moving to same hex
+        move_array.sort(key=Token.nearest_distance)
+        moved_hex = list()
+        for token in move_array:
+            if token.temp_move not in moved_hex:
+                moved_hex.append(token.temp_move)
+            else:
+                moves = set(token.get_adj_hex(board.upper.token_list, 
+                                            blocks, board)) ^ set(moved_hex)
+                check_move = self.best_valid_move(moves, token)
+                if check_move != False:
+                    token.initialize_move(check_move)
+                    moved_hex.append(token.coord)
+
+        for token in move_array:
+            token.move(token.temp_move, board)
+
 
 class Lower(Player):
     
