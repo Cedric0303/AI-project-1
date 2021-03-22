@@ -9,7 +9,7 @@ class Board():
         self.upper = Upper(token_data['upper'])
         self.lower = Lower(token_data['lower'])
         self.block = Non_player(token_data['block'])
-        self.turn = 0;
+        self.turn = 0
         
     # default size of board
     size = range(-4, +4+1)

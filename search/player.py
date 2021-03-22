@@ -10,8 +10,6 @@ class Player():
         
         self.token_list.clear()
 
-    # calculate direct line distance between two tokens' coordinates
-
     # return the enemy token nearest to the supplied Upper token
     def pick_nearest(self, token, lowers):
         nearest = 10 # arbitrary greater than 8

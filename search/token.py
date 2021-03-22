@@ -51,10 +51,10 @@ class Token():
         (x1, y1) = self.coord
         (x2, y2) = coord
         distance = self.calc_distance(self.coord, coord)
-        if (distance == 1):
-            print_slide(board.turn, x1, y1, x2, y2);
-        elif distance > 1:
-            print_swing(board.turn, x1, y1, x2, y2);
+        if (distance <= math.sqrt(2)):
+            print_slide(board.turn, x1, y1, x2, y2)
+        else:
+            print_swing(board.turn, x1, y1, x2, y2)
         self.coord = coord
 
     # calculate direct line distance between two tokens' coordinates

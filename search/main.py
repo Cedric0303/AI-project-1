@@ -16,7 +16,7 @@ from search.util import print_board
 from search.board import Board
 
 def main():
-
+    
     try:
         with open(sys.argv[1]) as file:
             token_data = json.load(file)
@@ -24,7 +24,7 @@ def main():
             board_dict = board.create_dict()
             while not board.win() and board.turn <= 5: # WIP
                 print_board(board_dict, 24*" " + "Turn " +  str(board.turn))
-                board.next_turn();
+                board.next_turn()
                 board.upper.play(board)
                 board_dict = board.create_dict()
                 board.battle(board_dict)
