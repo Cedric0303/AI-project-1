@@ -9,12 +9,10 @@ class Player():
     token_list = list()
 
     def clear_token_list(self):
-        
         self.token_list.clear()
 
     # return the enemy token nearest to the supplied Upper token
     def pick_nearest(self, token, lowers):
-
         nearest = 10 # arbitrary greater than 8
         best_target = False
         for target in lowers.token_list:
@@ -41,7 +39,6 @@ class Upper(Player):
     token_list = list()
 
     def __init__(self, token_data):
-        
         self.name = 'upper'
         for token, x, y in token_data:
             if token == 'r':
@@ -53,7 +50,6 @@ class Upper(Player):
     
     # carry out the moves for the Upper player each turn
     def play(self, board):
-        
         blocks = [block.coord for block in board.block.token_list]
         move_array = list()
         # play each token
@@ -93,7 +89,6 @@ class Lower(Player):
     token_list = list()
 
     def __init__(self, token_data):
-        
         self.name = 'lower'
         for token, x, y in token_data:
             if token == 'r':
@@ -108,7 +103,6 @@ class Non_player(Player):
     token_list = list()
 
     def __init__(self, token_data):
-        
         self.name = 'Block'
         for token, x, y in token_data:
             self.token_list.append(Block("\"\"", x, y))

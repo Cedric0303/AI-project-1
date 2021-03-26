@@ -5,7 +5,6 @@ class Board():
     # generate token classes of players 
     # with their coordinates and block tokens
     def __init__(self, token_data):
-        
         self.upper = Upper(token_data['upper'])
         self.lower = Lower(token_data['lower'])
         self.block = Non_player(token_data['block'])
@@ -17,7 +16,6 @@ class Board():
     # create dict of tokens on occupied hex tiles
     # from tokens of player classes
     def create_dict(self):
-        
         output_dict = dict()
         for each in self.upper.token_list + \
                     self.lower.token_list + \
@@ -30,7 +28,6 @@ class Board():
 
     def next_turn(self):
         self.turn += 1
-
 
     # set up fighting mechanic, 
     # where it takes a dict of all tokens on all coords, 

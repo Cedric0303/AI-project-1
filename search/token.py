@@ -4,7 +4,6 @@ from search.util import print_slide, print_swing
 class Token():
 
     def __init__(self, name, x, y):
-        
         self.name = name
         self.coord = x, y
         self.target = False
@@ -13,7 +12,6 @@ class Token():
     # generate list of adjacent hex tiles of current hex tile
     # including swings and blocks
     def get_adj_hex(self, token_list, block_list, board):
-        
         token_dict = {token.coord: token.name for token in token_list}
         temp_adj_list = list()
         (x, y) = self.coord
@@ -45,7 +43,6 @@ class Token():
         
         # remove block tiles from adjacency list
         final_adj_list = list(set(temp_adj_list) ^ set(block_list))
-        
         return final_adj_list
 
     def move(self, coord, board):
@@ -78,24 +75,20 @@ class Token():
 class Rock(Token):
 
     def __init__(self, name, x, y):
-
         self.enemy = Scissors
         super().__init__(name, x, y)
 
 class Paper(Token):
 
     def __init__(self, name, x, y):
-
         self.enemy = Rock
         super().__init__(name, x, y)
 
 class Scissors(Token):
 
     def __init__(self, name, x, y):
-
         self.enemy = Paper
         super().__init__(name, x, y)
 
 class Block(Token):
-    
     pass

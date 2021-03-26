@@ -16,7 +16,6 @@ from search.util import print_board
 from search.board import Board
 
 def main():
-    
     try:
         with open(sys.argv[1]) as file:
             token_data = json.load(file)
