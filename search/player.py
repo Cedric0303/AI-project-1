@@ -36,7 +36,8 @@ class Upper(Player):
                 self.token_list.append(Scissors(token.upper(), x, y))
 
     # generate path using BFS
-    # adapted from https://stackoverflow.com/a/47902476
+    # adapted from Stack Overflow, authored by tobias_k
+    # https://stackoverflow.com/a/47902476
     def get_path(token, blocks, token_list):
         queue = collections.deque([[token.coord]])
         seen = set([token.coord])
