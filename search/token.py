@@ -8,44 +8,7 @@ class Token():
         self.coord = x, y
         self.target = False
         self.temp_move = None
-
-    # generate list of adjacent hex tiles of current hex tile
-    # including swings and blocks
-    def get_adj_hex(self, token_list, block_list, board):
-        token_dict = {token.coord: token.name for token in token_list}
-        temp_adj_list = list()
-        (x, y) = self.coord
-        temp_list = [(x, y-1), (x-1, y), 
-                    (x+1, y), (x, y+1), 
-                    (x-1, y+1), (x+1, y-1)]
-        for (each_x, each_y) in temp_list:
-            if each_x in board.size and each_y in board.size:
-                temp_adj_list.append((each_x, each_y))
-        
-        # find adjacent swing tiles
-        valid_swing_tiles = list()
-        for each_adj in temp_adj_list:
-            if each_adj in token_dict and \
-            token_dict[each_adj].isalpha() and \
-            token_dict[each_adj].isupper():
-                valid_swing_tiles.append(each_adj)
-
-        # add swing tiles to adjacent hex tiles list if swing move is legal
-        for (x, y) in valid_swing_tiles:
-            temp_list = [(x, y-1), (x-1, y), 
-                        (x+1, y), (x, y+1), 
-                        (x-1, y+1), (x+1, y-1)]
-            for (each_x, each_y) in temp_list:
-                if each_x in board.size and each_y in board.size and \
-                (each_x, each_y) != self.coord and \
-                (each_x, each_y) not in temp_adj_list:
-                    temp_adj_list.append((each_x, each_y))        
-        
-        # remove block tiles from adjacency list
-        final_adj_list = list(set(temp_adj_list).difference(set(block_list)))
-        #final_adj_list = list(set(temp_adj_list) ^ set(block_list))
-        print(final_adj_list)
-        return final_adj_list
+        self.path = False    
 
     def move(self, coord, board):
         (x1, y1) = self.coord
@@ -56,23 +19,33 @@ class Token():
         else:
             print_swing(board.turn, x1, y1, x2, y2)
         self.coord = coord
+        if self.coord == self.target.coord:
+            self.target = False;
+        self.path.pop(0)
 
-    def initialize_move(self, coord):
-        self.temp_move = coord
+    def initialize_move(self):
+        self.temp_move = self.path[0]
         return self
 
     def nearest_distance(self):
         return self.calc_distance(self.target.coord, self.temp_move)
 
+    def set_target(self, target):
+        self.target = target
+
+    # generate list of adjacent hex tiles of current hex tile
+    def get_adj_hex(coord):
+        (x, y) = coord
+        adj_list = [(x, y-1), (x-1, y), (x+1, y), 
+                    (x, y+1), (x-1, y+1), (x+1, y-1)]
+        return adj_list
+
     # calculate direct line distance between two tokens' coordinates
-    def calc_distance(self, token1, token2):
+    def calc_distance(token1, token2):
         (x1, y1) = token1
         (x2, y2) = token2
         dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
         return dist
-
-    def set_target(self, target):
-        self.target = target
 
 class Rock(Token):
 

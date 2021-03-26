@@ -17,17 +17,29 @@ class Board():
     # from tokens of player classes
     def create_dict(self):
         output_dict = dict()
-        for each in self.upper.token_list + \
+        for token in self.upper.token_list + \
                     self.lower.token_list + \
                     self.block.token_list:
-            if each.coord not in output_dict:
-                output_dict[each.coord] = each.name
+            if token.coord not in output_dict:
+                output_dict[token.coord] = [token]
             else:
-                output_dict[each.coord] += each.name
+                output_dict[token.coord].append(token)
         return output_dict
 
     def next_turn(self):
         self.turn += 1
+
+    # create dict of token names for printing purpose
+    def print(self):
+        output_dict = dict()
+        for token in self.upper.token_list + \
+                    self.lower.token_list + \
+                    self.block.token_list:
+            if token.coord not in output_dict:
+                output_dict[token.coord] = token.name
+            else:
+                output_dict[token.coord] += token.name
+        return output_dict
 
     # set up fighting mechanic, 
     # where it takes a dict of all tokens on all coords, 
@@ -47,8 +59,8 @@ class Board():
         # decide what token dies
         for coord, tokens in coord_dict.items():
             if len(tokens) > 1:
-                for token in list(tokens):
-                    ttype = token.lower()
+                for token in tokens:
+                    ttype = token.name.lower()
                     if ttype == 'p':
                         rock_die = True
                     elif ttype == 'r':
@@ -57,8 +69,8 @@ class Board():
                         paper_die = True
 
                 # create list of surviving tokens
-                for token in list(tokens):
-                    ttype = token.lower()
+                for token in tokens:
+                    ttype = token.name.lower()
                     if (ttype == 'p' and paper_die == False) or \
                         (ttype == 'r' and rock_die == False) or \
                         (ttype == 's' and scissor_die == False):
@@ -70,17 +82,17 @@ class Board():
             # single token or tokens of same type on a hex tile
             else:
                 if coord not in alive_tokens:
-                    alive_tokens[coord] = [tokens]
+                    alive_tokens[coord] = tokens
                 else:
                     alive_tokens[coord].append(token)
 
         # re-insert surviving tokens into player classes
         for (x, y), tokens in alive_tokens.items():
             for token in tokens:
-                if token.isalpha() and token.isupper():
-                    self.upper = Upper([[token.lower(), x ,y]])
-                elif token.isalpha() and token.islower():
-                    self.lower = Lower([[token, x ,y]])
+                if token.name.isalpha() and token.name.isupper():
+                    self.upper = Upper([[token.name.lower(), x ,y]])
+                elif token.name.isalpha() and token.name.islower():
+                    self.lower = Lower([[token.name, x ,y]])
         return alive_tokens
 
     # win when no lower tokens left

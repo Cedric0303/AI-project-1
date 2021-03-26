@@ -21,14 +21,18 @@ def main():
             token_data = json.load(file)
             board = Board(token_data)
             board_dict = board.create_dict()
-            while not board.win() and board.turn <= 5: # WIP
-                print_board(board_dict, 24*" " + "Turn " +  str(board.turn))
+            while not board.win(): # and board.turn <= 5:
+                print_board(board.print(), 24*" " + "Turn " + 
+                            str(board.turn), compact=True)
                 board.next_turn()
                 board.upper.play(board)
                 board_dict = board.create_dict()
                 board.battle(board_dict)
             board_dict = board.create_dict()
-            print_board(board_dict, 24*" " + "Turn " + str(board.turn))
+            print_board(board.print(), 24*" " + "Turn " + 
+                        str(board.turn), compact=True)
+            if not board.lower.token_list: 
+                print("#" +  24*" " + "Upper Wins!")
 
     except IndexError:
         print("usage: python3 -m search path/to/input.json", file=sys.stderr)

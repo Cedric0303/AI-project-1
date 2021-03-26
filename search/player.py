@@ -1,6 +1,4 @@
-import math
-from os import O_TEMPORARY
-from sys import int_info
+import collections
 import search.board
 from search.token import Token, Rock, Paper, Scissors, Block
 
@@ -23,17 +21,6 @@ class Player():
                     best_target = target
         return best_target
 
-    # carry out search to find best path/ best move
-    def best_valid_move(self, moves, token):
-        nearest = 10
-        best_move = False
-        for move in moves:
-            distance = token.calc_distance(move, token.target.coord)
-            if distance < nearest:
-                nearest = distance
-                best_move = move
-        return best_move
-
 class Upper(Player):
 
     token_list = list()
@@ -47,8 +34,32 @@ class Upper(Player):
                 self.token_list.append(Paper(token.upper(), x, y))
             elif token == 's':
                 self.token_list.append(Scissors(token.upper(), x, y))
-    
-    # carry out the moves for the Upper player each turn
+
+    # generate path using BFS
+    # adapted from https://stackoverflow.com/a/47902476
+    def get_path(token, blocks, token_list):
+        queue = collections.deque([[token.coord]])
+        seen = set([token.coord])
+        while queue:
+            path = queue.popleft()
+            x, y = path[-1]
+            if (x, y) == token.target.coord:
+                path.pop(0)
+                return path;
+            temp_list = Token.get_adj_hex((x,y))
+            for coord in [each.coord for each in token_list]:
+                if coord in temp_list:
+                    temp_list.remove(coord)
+                temp_list += (Token.get_adj_hex(coord))
+            for (x2, y2) in temp_list:
+                if x2 in search.board.Board.size and \
+                y2 in search.board.Board.size and \
+                (x2, y2) not in blocks and \
+                (x2, y2) not in seen:
+                    queue.append(path + [(x2, y2)])
+                    seen.add((x2, y2))
+
+    # carry out moves for Upper player each turn
     def play(self, board):
         blocks = [block.coord for block in board.block.token_list]
         move_array = list()
@@ -59,28 +70,30 @@ class Upper(Player):
                 # get new target
                 target = self.pick_nearest(token, board.lower)
                 token.set_target(target)
-            if token.target:
-                moves = (token.get_adj_hex(board.upper.token_list, 
-                                            blocks, board))
-                check_move = self.best_valid_move(moves, token)
-                if check_move != False:
-                    move_array.append(token.initialize_move(check_move))
+                # do nothing if no target available
+                if not token.target:
+                    continue
+                # generate new path to target
+                if not token.path:
+                    token.path = Upper.get_path(token, blocks, 
+                                                board.upper.token_list)
+                move_array.append(token.initialize_move())
+            else:
+                move_array.append(token.initialize_move())
        
-        # check for own tokens moving to same hex
+        # change paths for tokens moving onto same hex
         move_array.sort(key=Token.nearest_distance)
         moved_hex = list()
         for token in move_array:
             if token.temp_move not in moved_hex:
                 moved_hex.append(token.temp_move)
             else:
-                moves = set(token.get_adj_hex(board.upper.token_list, 
-                                            blocks, board)) ^ set(moved_hex)
-                check_move = self.best_valid_move(moves, token)
-                if check_move != False:
-                    token.initialize_move(check_move)
-                    moved_hex.append(token.coord)
+                blocks_and_moved = set(blocks) ^ set(moved_hex)
+                token.path = Upper.get_path(token, blocks_and_moved, 
+                                            board.upper.token_list)
+                move_array.append(token.initialize_move())
 
-        # move tokens closer to target
+        # move tokens toward targets
         for token in move_array:
             token.move(token.temp_move, board)
 
