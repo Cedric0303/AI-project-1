@@ -42,7 +42,9 @@ class Token():
                     temp_adj_list.append((each_x, each_y))        
         
         # remove block tiles from adjacency list
-        final_adj_list = list(set(temp_adj_list) ^ set(block_list))
+        final_adj_list = list(set(temp_adj_list).difference(set(block_list)))
+        #final_adj_list = list(set(temp_adj_list) ^ set(block_list))
+        print(final_adj_list)
         return final_adj_list
 
     def move(self, coord, board):
