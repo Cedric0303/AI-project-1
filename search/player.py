@@ -52,13 +52,13 @@ class Upper(Player):
     def play(self, board):
         blocks = [block.coord for block in board.block.token_list]
         move_array = list()
+        
         # play each token
         for token in self.token_list:
             if not token.target:
                 # get new target
                 target = self.pick_nearest(token, board.lower)
                 token.set_target(target)
-                # move to target (WIP)
             if token.target:
                 moves = (token.get_adj_hex(board.upper.token_list, 
                                             blocks, board))
@@ -80,6 +80,7 @@ class Upper(Player):
                     token.initialize_move(check_move)
                     moved_hex.append(token.coord)
 
+        # move tokens closer to target
         for token in move_array:
             token.move(token.temp_move, board)
 
