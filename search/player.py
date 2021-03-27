@@ -46,7 +46,7 @@ class Upper(Player):
             x, y = path[-1]
             if (x, y) == token.target.coord:
                 path.pop(0)
-                return path;
+                return path
             temp_list = Token.get_adj_hex((x,y))
             for coord in [each.coord for each in token_list]:
                 if coord in temp_list:

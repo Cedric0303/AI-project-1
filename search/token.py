@@ -20,7 +20,7 @@ class Token():
             print_swing(board.turn, x1, y1, x2, y2)
         self.coord = coord
         if self.coord == self.target.coord:
-            self.target = False;
+            self.target = False
         self.path.pop(0)
 
     def initialize_move(self):
@@ -41,7 +41,7 @@ class Token():
         return adj_list
 
     # calculate direct line distance between two tokens' coordinates
-    def calc_distance(token1, token2):
+    def calc_distance(self, token1, token2):
         (x1, y1) = token1
         (x2, y2) = token2
         dist = math.sqrt((x2 - x1)**2 + (y2 - y1)**2)
