@@ -53,9 +53,7 @@ class Upper(Player):
                     temp_list.remove(coord)
                 temp_list += (Token.get_adj_hex(coord))
             for (x2, y2) in temp_list:
-                if x2 in search.board.Board.size and \
-                y2 in search.board.Board.size and \
-                (x2, y2) not in blocks and \
+                if (x2, y2) not in blocks and \
                 (x2, y2) not in seen:
                     queue.append(path + [(x2, y2)])
                     seen.add((x2, y2))
@@ -86,8 +84,7 @@ class Upper(Player):
 
         for token in targetless:
             unavailable = [move.coord for move in move_array]
-            adjacent = set(Token.get_adj_hex((token.coord))) ^ \
-                        set(blocks) ^ set(unavailable)
+            adjacent = set(Token.get_adj_hex((token.coord))).difference(set(blocks) |set(unavailable))
             adjacent = list(adjacent)
             token.path = [adjacent[0]]
             move_array.append(token.initialize_move())

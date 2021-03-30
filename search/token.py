@@ -1,5 +1,6 @@
 import math
 import sys
+import search.board
 from search.util import print_slide, print_swing
 
 class Token():
@@ -42,6 +43,11 @@ class Token():
         (x, y) = coord
         adj_list = [(x, y-1), (x-1, y), (x+1, y), 
                     (x, y+1), (x-1, y+1), (x+1, y-1)]
+        
+        for coord in adj_list:
+            if coord[0] not in search.board.Board.size or coord[1] not in search.board.Board.size:
+                adj_list.remove(coord)
+        
         return adj_list
 
     # calculate direct line distance between two tokens' coordinates
