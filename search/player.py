@@ -63,6 +63,7 @@ class Upper(Player):
     # carry out moves for Upper player each turn
     def play(self, board):
         blocks = [block.coord for block in board.block.token_list]
+        targetless = list()
         move_array = list()
         
         # play each token
@@ -73,6 +74,7 @@ class Upper(Player):
                 token.set_target(target)
                 # do nothing if no target available
                 if not token.target:
+                    targetless.append(token)
                     continue
                 # generate new path to target
                 if not token.path:
@@ -81,6 +83,14 @@ class Upper(Player):
                 move_array.append(token.initialize_move())
             else:
                 move_array.append(token.initialize_move())
+
+        for token in targetless:
+            unavailable = [move.coord for move in move_array]
+            adjacent = set(Token.get_adj_hex((token.coord))) ^ \
+                        set(blocks) ^ set(unavailable)
+            adjacent = list(adjacent)
+            token.path = [adjacent[0]]
+            move_array.append(token.initialize_move())
        
         # change paths for tokens moving onto same hex
         move_array.sort(key=Token.nearest_distance)

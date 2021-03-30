@@ -1,4 +1,5 @@
 import math
+import sys
 from search.util import print_slide, print_swing
 
 class Token():
@@ -19,8 +20,9 @@ class Token():
         else:
             print_swing(board.turn, x1, y1, x2, y2)
         self.coord = coord
-        if self.coord == self.target.coord:
-            self.target = False
+        if self.target:
+            if self.coord == self.target.coord:
+                self.target = False
         self.path.pop(0)
 
     def initialize_move(self):
@@ -28,6 +30,8 @@ class Token():
         return self
 
     def nearest_distance(self):
+        if not self.target:
+            return sys.maxsize
         return self.calc_distance(self.target.coord, self.temp_move)
 
     def set_target(self, target):
