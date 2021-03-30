@@ -21,16 +21,17 @@ def main():
             token_data = json.load(file)
             board = Board(token_data)
             board_dict = board.create_dict()
+            compact = True
             while not board.win(): # and board.turn <= 5:
                 print_board(board.print(), 24*" " + "Turn " + 
-                            str(board.turn), compact=True)
+                            str(board.turn), compact)
                 board.next_turn()
                 board.upper.play(board)
                 board_dict = board.create_dict()
                 board.battle(board_dict)
             board_dict = board.create_dict()
             print_board(board.print(), 24*" " + "Turn " + 
-                        str(board.turn), compact=True)
+                        str(board.turn), compact)
             if not board.lower.token_list: 
                 print("#" +  24*" " + "Upper Wins!")
 

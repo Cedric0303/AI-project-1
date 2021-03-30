@@ -29,6 +29,10 @@ class Board():
     def next_turn(self):
         self.turn += 1
 
+    # check if a coordinate is within board boundaries
+    def check_bounds(x, y):
+        return x in Board.size and y in Board.size and ((-x) - y) in Board.size
+
     # create dict of token names for printing purpose
     def print(self):
         output_dict = dict()
