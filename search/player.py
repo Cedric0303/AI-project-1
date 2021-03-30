@@ -1,5 +1,6 @@
 import collections
 import search.board
+import sys
 from search.token import Token, Rock, Paper, Scissors, Block
 
 class Player():
@@ -11,7 +12,7 @@ class Player():
 
     # return the enemy token nearest to the supplied Upper token
     def pick_nearest(self, token, lowers):
-        nearest = 10 # arbitrary greater than 8
+        nearest = sys.maxsize
         best_target = False
         for target in lowers.token_list:
             if isinstance(target, token.enemy):
@@ -64,7 +65,6 @@ class Upper(Player):
                 (x2, y2) not in other_enemies:
                     queue.append(path + [(x2, y2)])
                     seen.add((x2, y2))
-        
         return False
 
     # carry out moves for Upper player each turn
@@ -73,7 +73,7 @@ class Upper(Player):
         enemies = [enemy.coord for enemy in board.lower.token_list]
         targetless = list()
         move_array = list()
-        
+
         # play each token
         for token in self.token_list:
             if not token.target:
@@ -87,7 +87,7 @@ class Upper(Player):
                 # generate new path to target
                 if token.target and not token.path:
                     token.path = Upper.get_path(token, blocks, enemies,
-                                                board.upper.token_list)
+                                board.upper.token_list)
                     if not token.path:
                         targetless.append(token)
                         continue
@@ -112,17 +112,20 @@ class Upper(Player):
         # change paths for tokens moving onto same hex
         move_array.sort(key=Token.nearest_distance)
         moved_hex = list()
+        moved = list()
         for token in move_array:
             if token.next_move not in moved_hex:
+                moved.append(token.initialize_move())
                 moved_hex.append(token.next_move)
             else:
                 blocks_and_moved = set(blocks) ^ set(moved_hex)
-                token.path = Upper.get_path(token, blocks_and_moved, enemies,
-                                            board.upper.token_list)
-                moved_hex.append(token.initialize_move())
+                token.path = Upper.get_path(token, blocks_and_moved, 
+                            enemies,board.upper.token_list)
+                moved.append(token.initialize_move())
+                moved_hex.append(token.next_move)
 
         # move tokens toward targets
-        for token in move_array:
+        for token in moved:
             token.move(token.next_move, board)
 
 
