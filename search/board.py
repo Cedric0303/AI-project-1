@@ -50,10 +50,6 @@ class Board():
     # updates surviving tokens of Upper & Lower class after battle
     # and update board Upper and Lower classes
     def battle(self, coord_dict):
-
-        paper_die = False
-        scissor_die = False
-        rock_die = False
         
         alive_tokens = dict()
 
@@ -62,6 +58,11 @@ class Board():
 
         # decide what token dies
         for coord, tokens in coord_dict.items():
+
+            paper_die = False
+            scissor_die = False
+            rock_die = False
+
             if len(tokens) > 1:
                 for token in tokens:
                     ttype = token.name.lower()
@@ -89,13 +90,12 @@ class Board():
                     alive_tokens[coord] = tokens
                 else:
                     alive_tokens[coord].append(token)
-
         # re-insert surviving tokens into player classes
         for (x, y), tokens in alive_tokens.items():
             for token in tokens:
-                if token.name.isalpha() and token.name.isupper():
+                if token.name.isupper():
                     self.upper = Upper([[token.name.lower(), x ,y]])
-                elif token.name.isalpha() and token.name.islower():
+                elif token.name.islower():
                     self.lower = Lower([[token.name, x ,y]])
         return alive_tokens
 
