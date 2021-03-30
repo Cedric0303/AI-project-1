@@ -98,7 +98,7 @@ class Upper(Player):
 
         # generate valid move for targetless tokens
         for token in targetless:
-            unavailable = [move.coord for move in move_array]
+            unavailable = [move.next_move for move in move_array]
             moves = list()
             adjacent = Token.get_adj_hex((token.coord))
             for (x, y) in adjacent:
