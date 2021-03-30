@@ -38,9 +38,12 @@ class Upper(Player):
     # generate path using BFS
     # adapted & modified from Stack Overflow, authored by tobias_k
     # https://stackoverflow.com/a/47902476
-    def get_path(token, blocks, token_list):
+    def get_path(token, blocks, enemies, token_list):
         queue = collections.deque([[token.coord]])
         seen = set([token.coord])
+        other_enemies = set(enemies)
+        other_enemies.remove(token.target.coord)
+
         while queue:
             path = queue.popleft()
             x, y = path[-1]
@@ -57,7 +60,8 @@ class Upper(Player):
                         temp_list.append((x3, y3))
             for (x2, y2) in temp_list:
                 if search.board.Board.check_bounds(x2, y2) and \
-                (x2, y2) not in blocks and (x2, y2) not in seen:
+                (x2, y2) not in blocks and (x2, y2) not in seen and \
+                (x2, y2) not in other_enemies:
                     queue.append(path + [(x2, y2)])
                     seen.add((x2, y2))
 
@@ -79,8 +83,8 @@ class Upper(Player):
                     targetless.append(token)
                     continue
                 # generate new path to target
-                if not token.path:
-                    token.path = Upper.get_path(token, blocks, 
+                if token.target and not token.path:
+                    token.path = Upper.get_path(token, blocks, enemies,
                                                 board.upper.token_list)
                 move_array.append(token.initialize_move())
             else:
@@ -107,9 +111,9 @@ class Upper(Player):
                 moved_hex.append(token.next_move)
             else:
                 blocks_and_moved = set(blocks) ^ set(moved_hex)
-                token.path = Upper.get_path(token, blocks_and_moved, 
+                token.path = Upper.get_path(token, blocks_and_moved, enemies,
                                             board.upper.token_list)
-                move_array.append(token.initialize_move())
+                moved_hex.append(token.initialize_move())
 
         # move tokens toward targets
         for token in move_array:

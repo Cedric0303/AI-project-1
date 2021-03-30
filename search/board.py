@@ -59,11 +59,16 @@ class Board():
         # decide what token dies
         for coord, tokens in coord_dict.items():
 
-            paper_die = False
-            scissor_die = False
-            rock_die = False
+            # paper_die = False
+            # scissor_die = False
+            # rock_die = False
 
             if len(tokens) > 1:
+
+                paper_die = False
+                scissor_die = False
+                rock_die = False
+
                 for token in tokens:
                     ttype = token.name.lower()
                     if ttype == 'p':
