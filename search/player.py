@@ -64,6 +64,8 @@ class Upper(Player):
                 (x2, y2) not in other_enemies:
                     queue.append(path + [(x2, y2)])
                     seen.add((x2, y2))
+        
+        return False
 
     # carry out moves for Upper player each turn
     def play(self, board):
@@ -86,7 +88,11 @@ class Upper(Player):
                 if token.target and not token.path:
                     token.path = Upper.get_path(token, blocks, enemies,
                                                 board.upper.token_list)
-                move_array.append(token.initialize_move())
+                    if not token.path:
+                        targetless.append(token)
+                        continue
+                    else:
+                        move_array.append(token.initialize_move())
             else:
                 move_array.append(token.initialize_move())
 
