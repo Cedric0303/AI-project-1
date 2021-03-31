@@ -73,13 +73,16 @@ class Upper(Player):
         enemies = [enemy.coord for enemy in board.lower.token_list]
         targetless = list()
         move_array = list()
+        targeted = list()
 
         # play each token
         for token in self.token_list:
             if not token.target:
                 # get new target
                 target = self.pick_nearest(token, board.lower)
-                token.set_target(target)
+                if target not in targeted:
+                    token.set_target(target)
+                    targeted.append(target)
                 # do nothing if no target available
                 if not token.target:
                     targetless.append(token)
